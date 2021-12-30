@@ -73,7 +73,7 @@ jobs:
 
       - name: Test image
         run: |
-          IMAGE_NAME="${{ steps.image.outputs.ghcr }}"
+          export IMAGE_NAME="${{ steps.image.outputs.ghcr }}"
           ./run-tests.sh
 
       - name: Push image
