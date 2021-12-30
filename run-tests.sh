@@ -25,13 +25,16 @@ run_test () {
     # Clean temporary files
     rm -f *.wixobj
 
+    # Load arguments
+    source ./args
+
     # Run candle
-    docker_run candle -nologo Main.wxs
+    docker_run candle -nologo $CANDLE_ARGS Main.wxs
 
     # Check if candle succeeded before proceeding
     if [ -f Main.wixobj ]; then
       # Run light
-      docker_run light -nologo -sval Main.wixobj
+      docker_run light -nologo -sval $LIGHT_ARGS Main.wixobj
     else
       echo "Not running light since candle failed." >&2
       exit 1
