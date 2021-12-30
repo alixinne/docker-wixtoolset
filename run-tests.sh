@@ -44,9 +44,9 @@ FAILED_TESTS=0
 for TEST_DIR in tests/*; do
   echo "$TEST_DIR" >&2
   if run_test "$TEST_DIR"; then
-    echo -e "\e[32m$TEST_DIR: success" >&2
+    echo -e "\e[32m$TEST_DIR: success\e[0m" >&2
   else
-    echo -e "\e[31m$TEST_DIR: failed" >&2
+    echo -e "\e[31m$TEST_DIR: failed\e[0m" >&2
     FAILED_TESTS=$((FAILED_TESTS + 1))
   fi
 done
