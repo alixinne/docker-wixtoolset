@@ -1,13 +1,6 @@
 name: build
 
-on:
-  pull_request:
-  push:
-    branches:
-      - '*'
-  create:
-    tags:
-      - 'v*'
+on: [pull_request, push]
 
 jobs:
   build:
@@ -27,7 +20,7 @@ jobs:
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
-        if: "!startsWith(github.ref, 'refs/tags/v')"
+        id: semantic
 
       # Setup Docker buld action
       - name: Set up Docker Buildx
@@ -53,9 +46,6 @@ jobs:
           if [[ "$GITHUB_REF" == "refs/heads/master" ]]; then
             LABEL=latest
             PUSH=true
-          elif [[ "$GITHUB_REF" =~ "^refs/heads/v" ]]; then
-            LABEL="$(echo -n "$GITHUB_REF" | sed 's#refs/heads/v##')"
-            PUSH=true
           else
             LABEL="$(echo -n "$GITHUB_REF" | sed 's#refs/heads/##')"
             PUSH=false
@@ -63,26 +53,36 @@ jobs:
 
           echo ::set-output name=label::"$LABEL"
           echo ::set-output name=push::"$PUSH"
-          echo ::set-output name=ghcr::"ghcr.io/${{ github.actor }}/docker-wixtoolset:$LABEL"
+          echo ::set-output name=ghcr::"ghcr.io/${{ github.actor }}/docker-wixtoolset"
+          echo ::set-output name=docker_hub::"${{ secrets.DOCKER_USERNAME }}/wixtoolset"
+          if [[ "${{ steps.semantic.outputs.new_release_published }}" == "true" ]]; then
+            echo ::set-output name=ghcr_tag::"ghcr.io/${{ github.actor }}/docker-wixtoolset:${{ steps.semantic.outputs.new_release_version }}"
+            echo ::set-output name=docker_hub_tag::"${{ secrets.DOCKER_USERNAME }}/wixtoolset:${{ steps.semantic.outputs.new_release_version }}"
+          else
+            echo ::set-output name=ghcr_tag::
+            echo ::set-output name=docker_hub_tag::
+          fi
         id: image
 
       - name: Build image
         uses: docker/build-push-action@v2
         with:
-          tags: ${{ steps.image.outputs.ghcr }}
+          tags: ${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}
           load: true
 
       - name: Test image
         run: |
-          export IMAGE_NAME="${{ steps.image.outputs.ghcr }}"
+          export IMAGE_NAME="${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}"
           ./run-tests.sh
 
       - name: Push image
         uses: docker/build-push-action@v2
         with:
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/wixtoolset:${{ steps.image.outputs.label }}
-            ${{ steps.image.outputs.ghcr }}
+            ${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}
+            ${{ steps.image.outputs.docker_hub }}:${{ steps.image.outputs.label }}
+            ${{ steps.image.outputs.ghcr_tag }}
+            ${{ steps.image.outputs.docker_hub_tag }}
           push: ${{ steps.image.outputs.push }}
 
       # On master, actually run semantic release
