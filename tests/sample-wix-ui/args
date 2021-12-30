@@ -1,0 +1,2 @@
+CANDLE_ARGS=
+LIGHT_ARGS="-ext WixUIExtension"
