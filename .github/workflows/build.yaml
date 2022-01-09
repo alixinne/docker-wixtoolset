@@ -53,10 +53,10 @@ jobs:
 
           echo ::set-output name=label::"$LABEL"
           echo ::set-output name=push::"$PUSH"
-          echo ::set-output name=ghcr::"ghcr.io/${{ github.actor }}/docker-wixtoolset"
+          echo ::set-output name=ghcr::"ghcr.io/${{ github.actor }}/wixtoolset"
           echo ::set-output name=docker_hub::"${{ secrets.DOCKER_USERNAME }}/wixtoolset"
           if [[ "${{ steps.semantic.outputs.new_release_published }}" == "true" ]]; then
-            echo ::set-output name=ghcr_tag::"ghcr.io/${{ github.actor }}/docker-wixtoolset:${{ steps.semantic.outputs.new_release_version }}"
+            echo ::set-output name=ghcr_tag::"ghcr.io/${{ github.actor }}/wixtoolset:${{ steps.semantic.outputs.new_release_version }}"
             echo ::set-output name=docker_hub_tag::"${{ secrets.DOCKER_USERNAME }}/wixtoolset:${{ steps.semantic.outputs.new_release_version }}"
           else
             echo ::set-output name=ghcr_tag::
@@ -72,7 +72,7 @@ jobs:
 
       - name: Test image
         run: |
-          export IMAGE_NAME="${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}"
+          export IMAGE_NAME="${{ github.actor }}/wixtoolset:${{ steps.image.outputs.label }}"
           ./run-tests.sh
 
       - name: Push image
