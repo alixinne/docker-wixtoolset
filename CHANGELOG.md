@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/vtavernier/docker-wixtoolset/compare/v1.0.1...v1.0.2) (2022-01-09)
+
+
+### Bug Fixes
+
+* use the same name for ghcr and dockerhub ([1f39b62](https://github.com/vtavernier/docker-wixtoolset/commit/1f39b62a57ec83cc4b4253802771e006fa721397))
+
 ## [1.0.1](https://github.com/vtavernier/docker-wixtoolset/compare/v1.0.0...v1.0.1) (2021-12-30)
 
 
