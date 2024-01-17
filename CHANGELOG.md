@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/vtavernier/docker-wixtoolset/compare/v1.0.2...v1.0.3) (2024-01-17)
+
+
+### Bug Fixes
+
+* remove docker hub support ([c565a17](https://github.com/vtavernier/docker-wixtoolset/commit/c565a174deb4e977bfbebb7993870d583e7dd181))
+
 ## [1.0.2](https://github.com/vtavernier/docker-wixtoolset/compare/v1.0.1...v1.0.2) (2022-01-09)
 
 
