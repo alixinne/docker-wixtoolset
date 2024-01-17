@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-IMAGE_NAME="${IMAGE_NAME:-vtavernier/wixtoolset:latest}"
+IMAGE_NAME="${IMAGE_NAME:-ghcr.io/vtavernier/wixtoolset:latest}"
 
 if hash podman >/dev/null 2>&1; then
   DOCKER=podman

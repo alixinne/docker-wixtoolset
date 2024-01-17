@@ -64,12 +64,15 @@ jobs:
       - name: Build image
         uses: docker/build-push-action@v5
         with:
-          tags: ${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}
+          tags: |
+            ${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}
+            ${{ steps.image.outputs.ghcr_tag }}
           load: true
 
       - name: Test image
+        env:
+          IMAGE_NAME: ${{ steps.image.outputs.ghcr }}:${{ steps.image.outputs.label }}
         run: |
-          export IMAGE_NAME="${{ github.actor }}/wixtoolset:${{ steps.image.outputs.label }}"
           ./run-tests.sh
 
       - name: Push image
